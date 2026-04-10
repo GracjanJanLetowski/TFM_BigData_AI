@@ -1,0 +1,36 @@
+# Laravel specific
+/onlineStore/node_modules
+/onlineStore/public/hot
+/onlineStore/public/storage
+/onlineStore/storage/*.key
+/onlineStore/vendor
+.env
+/onlineStore/.env
+/onlineStore/.env.backup
+/onlineStore/.phpunit.result.cache
+/onlineStore/docker-compose.override.yml
+/onlineStore/Homestead.json
+/onlineStore/Homestead.yaml
+/onlineStore/npm-debug.log
+/onlineStore/yarn-error.log
+/onlineStore/.idea
+/onlineStore/.vscode
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+/ai_recommender/venv
+/ai_recommender/__pycache__
+/ai_recommender/.env
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
