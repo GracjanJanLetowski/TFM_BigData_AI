@@ -55,9 +55,13 @@ Cálculo dinámico de la **Velocidad de Venta**. El sistema genera alertas de st
 *   MySQL (XAMPP / Laragon / Docker)
 
 ### Guía Rápida de Arranque
-Para facilitar las pruebas, se incluye un script que lanza ambos servicios simultáneamente:
+Para facilitar las pruebas, se incluyen scripts de gestión global:
+*   **START_SYSTEM.bat**: Lanza tanto la tienda (Laravel) como el motor de IA (Python) en ventanas independientes.
+*   **STOP_SYSTEM.bat**: Cierra de forma segura todos los procesos vinculados a la aplicación.
+
+### Guía Rápida de Arranque
 1.  Configura el `.env` en la carpeta `onlineStore` con tu base de datos MySQL.
-2.  Ejecuta `INICIAR_TODO.bat` en la raíz del proyecto.
+2.  Ejecuta `START_SYSTEM.bat` en la raíz del proyecto.
 
 ---
 

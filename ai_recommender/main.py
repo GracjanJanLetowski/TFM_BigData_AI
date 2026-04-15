@@ -4,6 +4,24 @@ import numpy as np
 from sqlalchemy import create_engine
 from fastapi import FastAPI, HTTPException
 from sklearn.cluster import KMeans
+import logging
+from datetime import datetime
+
+# ─────────────────────────────────────────────
+#  Configuración de Monitorización (Logs)
+# ─────────────────────────────────────────────
+ai_logger = logging.getLogger("ai_monitoring")
+ai_logger.setLevel(logging.INFO)
+# Evitar duplicados si se recarga el script
+if not ai_logger.handlers:
+    file_handler = logging.FileHandler("ai_predictions.log")
+    file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"))
+    ai_logger.addHandler(file_handler)
+
+def log_prediction(module, details):
+    ai_logger.info(f"[{module.upper()}] {details}")
+    for handler in ai_logger.handlers:
+        handler.flush()
 
 # ─────────────────────────────────────────────
 #  Configuración de la Base de Datos
@@ -183,11 +201,20 @@ def recommend(user_id: int, top_k: int = 4):
         matrix = df.pivot_table(index='user_id', columns='product_id', values='score').fillna(0)
         if user_id not in matrix.index:
             popular = df.groupby('product_id')['score'].count().sort_values(ascending=False).head(top_k)
-            return {"recommended_product_ids": [int(x) for x in popular.index.tolist()], "type": "popular (cold start)"}
+            ids = [int(x) for x in popular.index.tolist()]
+            
+            # Monitorización de la predicción (Cold Start)
+            log_prediction("Recs", f"User: {user_id} | Type: popular (cold start) | IDs: {ids}")
+            
+            return {"recommended_product_ids": ids, "type": "popular (cold start)"}
         user_vector = matrix.loc[user_id]
         sims = matrix.corrwith(user_vector, axis=1).sort_values(ascending=False).index[1:6]
         recs = df[df['user_id'].isin(sims) & ~df['product_id'].isin(user_vector[user_vector > 0].index.tolist())]
         ids = recs.groupby('product_id')['score'].sum().sort_values(ascending=False).head(top_k).index.tolist()
+        
+        # Monitorización de la predicción
+        log_prediction("Recs", f"User: {user_id} | Type: personalized | IDs: {ids}")
+        
         return {"recommended_product_ids": [int(x) for x in ids], "type": "personalized"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
