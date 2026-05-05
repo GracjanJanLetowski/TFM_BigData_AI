@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     subgraph "Capa de Cliente"
         A[Usuario / Navegador]
@@ -25,3 +26,4 @@ graph TD
     A --> B
     C --> E
     J -.-> |"Respuesta JSON"| C
+```
